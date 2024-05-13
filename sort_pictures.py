@@ -2,6 +2,8 @@ import os
 import shutil
 from datetime import datetime
 import exifread
+import tkinter as tk
+from tkinter import filedialog
 
 def sortiere_dateien(bilder_ordner):
     for datei in os.listdir(bilder_ordner):
@@ -26,7 +28,16 @@ def get_aufnahmedatum(datei_pfad):
         print(f"Fehler beim Lesen des Aufnahmedatums von {datei_pfad}: {e}")
         return None
 
+def ordner_auswaehlen():
+    bilder_ordner = filedialog.askdirectory()
+    if bilder_ordner:
+        sortiere_dateien(bilder_ordner)
+        print("Dateien wurden sortiert.")
+
+def main():
+    root = tk.Tk()
+    root.withdraw()  # Verstecke das Hauptfenster
+    ordner_auswaehlen()
+
 if __name__ == "__main__":
-    bilder_ordner = input("Geben Sie den Pfad zum Ordner mit den Bildern ein: ")
-    sortiere_dateien(bilder_ordner)
-    print("Dateien wurden sortiert.")
+    main()
