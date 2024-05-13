@@ -5,39 +5,39 @@ import exifread
 import tkinter as tk
 from tkinter import filedialog
 
-def sortiere_dateien(bilder_ordner):
-    for datei in os.listdir(bilder_ordner):
-        datei_pfad = os.path.join(bilder_ordner, datei)
-        if os.path.isfile(datei_pfad):
-            aufnahmedatum = get_aufnahmedatum(datei_pfad)
-            if aufnahmedatum:
-                ziel_ordner = os.path.join(bilder_ordner, aufnahmedatum.strftime("%Y-%m-%d"))
-                if not os.path.exists(ziel_ordner):
-                    os.makedirs(ziel_ordner)
-                shutil.move(datei_pfad, ziel_ordner)
+def sort_files(picture_folder):
+    for file in os.listdir(picture_folder):
+        file_pfad = os.path.join(picture_folder, file)
+        if os.path.isfile(file_pfad):
+            creation_date = get_creation_date(file_pfad)
+            if creation_date:
+                target_folder = os.path.join(picture_folder, creation_date.strftime("%Y-%m-%d"))
+                if not os.path.exists(target_folder):
+                    os.makedirs(target_folder)
+                shutil.move(file_pfad, target_folder)
 
-def get_aufnahmedatum(datei_pfad):
+def get_creation_date(file_pfad):
     try:
-        if datei_pfad.lower().endswith((".jpg", ".jpeg", ".png", ".arw", ".mp4")):
-            with open(datei_pfad, 'rb') as bild_datei:
-                tags = exifread.process_file(bild_datei, stop_tag='EXIF DateTimeOriginal')
-                aufnahmedatum_str = str(tags.get('EXIF DateTimeOriginal'))
-                aufnahmedatum = datetime.strptime(aufnahmedatum_str, '%Y:%m:%d %H:%M:%S')
-                return aufnahmedatum
+        if file_pfad.lower().endswith((".jpg", ".jpeg", ".png", ".arw", ".mp4")):
+            with open(file_pfad, 'rb') as picture_file:
+                tags = exifread.process_file(picture_file, stop_tag='EXIF DateTimeOriginal')
+                creation_date_str = str(tags.get('EXIF DateTimeOriginal'))
+                creation_date = datetime.strptime(creation_date_str, '%Y:%m:%d %H:%M:%S')
+                return creation_date
     except Exception as e:
-        print(f"Fehler beim Lesen des Aufnahmedatums von {datei_pfad}: {e}")
+        print(f"Error reading creation date {file_pfad}: {e}")
         return None
 
-def ordner_auswaehlen():
-    bilder_ordner = filedialog.askdirectory()
-    if bilder_ordner:
-        sortiere_dateien(bilder_ordner)
-        print("Dateien wurden sortiert.")
+def choose_folder():
+    picture_folder = filedialog.askdirectory()
+    if picture_folder:
+        sort_files(picture_folder)
+        print("Pictures sorted.")
 
 def main():
     root = tk.Tk()
-    root.withdraw()  # Verstecke das Hauptfenster
-    ordner_auswaehlen()
+    root.withdraw()
+    choose_folder()
 
 if __name__ == "__main__":
     main()
