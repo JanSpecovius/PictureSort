@@ -37,7 +37,20 @@ def choose_folder():
 def main():
     root = tk.Tk()
     root.withdraw()
-    choose_folder()
+
+    # Erstellen der UI
+    ui = tk.Tk()
+    ui.title("Bilder sortieren")
+
+    # Funktion für den Button
+    def select_folder():
+        choose_folder()
+
+    # Button erstellen
+    button = tk.Button(ui, text="Ordner auswählen", command=select_folder)
+    button.pack(pady=20)
+
+    ui.mainloop()
 
 if __name__ == "__main__":
     main()
